@@ -6,3 +6,9 @@ desc 'starts a console'
 task :console do
   Pry.start
 end
+
+desc 'start game'
+task :run do
+  game = Game.new
+  game.intro
+end
