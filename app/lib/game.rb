@@ -1,8 +1,15 @@
 class Game
     def intro
         puts "A familiar face at the bar greets you. \"Hey, long time no see! What was your name again?\""
-        $name = STDIN.gets.chomp
-        puts "\"Oh yeah... #{$name.capitalize}!\""
+        $name = STDIN.gets.chomp.capitalize
+        user = User.find_by(username: $name)
+        if user != nil
+            puts "\"Oh yeah... #{$name}! Welcome Back!\""
+        else 
+            puts "Oh yeah... #{$name}! Nice to meet you!"
+            User.create(username: $name)
+        end
+
         puts "You look around the room and make eye contact with a hottie. Your friend notices and says, \"You should go talk to that hottie over there.\""
         step1
     end
