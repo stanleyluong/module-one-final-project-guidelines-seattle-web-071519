@@ -1,2 +1,0 @@
-class Levels
-end

@@ -11,6 +11,10 @@ class Game
         end
 
         puts "You look around the room and make eye contact with a hottie. Your friend notices and says, \"You should go talk to that hottie over there.\""
+        
+        npc = NPC.all.sample 
+        puts "You see #{npc.name}"   
+        
         step1
     end
 
