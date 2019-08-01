@@ -11,6 +11,7 @@ class Game
         end
 
         puts "You look around the room and make eye contact with a hottie. Your friend notices and says, \"You should go talk to that hottie over there.\""
+        #LOOK AROUND Random people at Bar
         step1
     end
 
