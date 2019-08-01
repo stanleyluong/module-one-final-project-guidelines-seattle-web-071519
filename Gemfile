@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-source "https://rubygems.org"
-gem 'bundler'
+source 'https://rubygems.org'
+gem "bundler"
 gem "rest-client"
 gem "json"
 gem "sinatra-activerecord"
