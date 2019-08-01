@@ -1,2 +1,3 @@
-class NPC < ActiveRecord::Base
+class Npc < ActiveRecord::Base
+    has_many :relationships
 end

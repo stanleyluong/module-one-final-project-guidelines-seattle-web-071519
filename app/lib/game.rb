@@ -7,46 +7,65 @@ class Game
             puts "\"Oh yeah... #{$name}! Welcome Back!\""
         else 
             puts "Oh yeah... #{$name}! Nice to meet you!"
-            User.create(username: $name)
+            user = User.create(username: $name)
         end
 
         puts "You look around the room and make eye contact with a hottie. Your friend notices and says, \"You should go talk to that hottie over there.\""
 
-        npc = NPC.all.sample 
+        npc = Npc.all.sample 
         puts "You see #{npc.name}"   
-    
-        step1
+        
+        rel = Relationship.find_by(user: user, npc: npc)
+        puts rel
+        puts rel.points
+
+        if rel == nil
+            puts "You've never met. Go introduce yourself"
+            rel = Relationship.create(user: user, npc: npc, points: 50)
+        else 
+            if rel.points > 80
+                puts "They really like you"
+            elsif rel.points < 35
+                puts "They loathe you"
+            else 
+                puts "You're just friends"
+            end
+        end
+
+        step1(rel)
     end
 
-    def step1
-        puts "1) Go over and talk. 2) Run away."
+    def step1(rel)
+        puts "1) Go over and talk to #{rel.npc.name} 2) Run away."
         action = STDIN.gets.chomp
         if action == "1"
             puts "You start walking in the hottie's direction when someone approaches the hottie first. What do you do?"
-            step2        
+            step2(rel)        
         elsif action == "2"
             puts "GAME OVER!" 
             puts "Fortune favors the bold. -Virgil"
-            intro
         else 
             puts "Just be yourself."
             puts "Pick again"
-            step1
+            step1(rel)
         end
     end
 
-    def step2
+    def step2(rel)
         puts "1) Enter their conversation. 2) Sucker punch competition in the face."
         action = STDIN.gets.chomp
         if action == "1"
             puts "You say \"Looks like the party is over here!\""
-            puts "The hottie laughs and smiles. The competition frowns."    
+            puts "The hottie laughs and smiles. The competition frowns."
+            rel.points += 7
+            rel.save    
             step3
         elsif action == "2"
             puts "GAME OVER!" 
             puts "The bouncers restrain you, beat you up, and throw you out into the alleyway."
             puts "\"Holding on to anger is like grasping a hot coal with the intent of throwing it at someone else; you are the one who gets burned.\" -Buddha" 
-            intro
+            rel.points -= 27
+            rel.save 
         else 
             puts "Just be yourself."
             puts "Pick again"

@@ -10,12 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_01_194129) do
+ActiveRecord::Schema.define(version: 2019_08_01_200221) do
 
   create_table "npcs", force: :cascade do |t|
     t.string "name"
     t.integer "age"
     t.string "favorite_drink"
+  end
+
+  create_table "relationships", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "npc_id"
+    t.integer "points"
   end
 
   create_table "users", force: :cascade do |t|
