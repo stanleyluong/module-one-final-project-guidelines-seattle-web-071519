@@ -1,5 +1,5 @@
 class Game
-    def intro
+    def walk_into_a_bar
         puts "A familiar face at the bar greets you. \"Hey, long time no see! What was your name again?\""
         $name = STDIN.gets.chomp.capitalize
         user = User.find_by(username: $name)
@@ -16,8 +16,8 @@ class Game
         puts "You see #{npc.name}"   
         
         rel = Relationship.find_by(user: user, npc: npc)
-        puts rel
-        puts rel.points
+        # puts rel
+        # puts rel.points
 
         if rel == nil
             puts "You've never met. Go introduce yourself"
@@ -28,75 +28,79 @@ class Game
             elsif rel.points < 35
                 puts "They loathe you"
             else 
-                puts "You're just friends"
+                puts "This can go either way"
             end
         end
 
-        step1(rel)
+        go_over(rel)
     end
 
-    def step1(rel)
+    def go_over(rel)
+        
         puts "1) Go over and talk to #{rel.npc.name} 2) Run away."
         action = STDIN.gets.chomp
         if action == "1"
-            puts "You start walking in the hottie's direction when someone approaches the hottie first. What do you do?"
-            step2(rel)        
+            puts "You start walking in #{rel.npc.name}'s direction when someone approaches them first. What do you do?"
+            enter_conversation(rel)        
         elsif action == "2"
             puts "GAME OVER!" 
             puts "Fortune favors the bold. -Virgil"
         else 
             puts "Just be yourself."
             puts "Pick again"
-            step1(rel)
+            go_over(rel)
         end
     end
 
-    def step2(rel)
+    def enter_conversation(rel)
         puts "1) Enter their conversation. 2) Sucker punch competition in the face."
         action = STDIN.gets.chomp
         if action == "1"
             puts "You say \"Looks like the party is over here!\""
-            puts "The hottie laughs and smiles. The competition frowns."
+            puts "The #{rel.npc.name} laughs and smiles. The competition frowns."
             rel.points += 7
             rel.save    
-            step3
-        elsif action == "2"
-            puts "GAME OVER!" 
+            puts "You have #{rel.points} points with #{rel.npc.name}"
+            conversate(rel)
+        elsif action == "2" 
             puts "The bouncers restrain you, beat you up, and throw you out into the alleyway."
             puts "\"Holding on to anger is like grasping a hot coal with the intent of throwing it at someone else; you are the one who gets burned.\" -Buddha" 
+            puts "GAME OVER!"
             rel.points -= 27
             rel.save 
+            puts "You have #{rel.points} points with #{rel.npc.name}"
+            walk_into_a_bar(rel)
         else 
             puts "Just be yourself."
             puts "Pick again"
-            step2
+            enter_conversation(rel)
         end
     end
 
-    def step3
+    def conversate(rel)
         puts "1) Use pickup line. 2) Insult."
         action = STDIN.gets.chomp
         if action == "1"
             puts "You say #{API.pickupline}"
-            puts "The hottie is delighted. In the face of superior game, the competition surrenders and retreats."
-            step4
+            puts "#{rel.npc.name} is delighted. In the face of superior game, the competition surrenders and retreats."
+            introductions(rel)
         elsif action == "2"
             puts "GAME OVER!"
             puts "An injury is much sooner forgotten than an insult. -Philip Stanhope, 4th Earl of Chesterfield"
-            intro
+            walk_into_a_bar(rel)
         else 
             puts "Just be yourself."
             puts "Pick again"
-            step3
+            conversate(rel)
         end
     end
 
-    def step4
+    def introductions(rel)
         puts "1) Introduce yourself. 2) Ask for phone number."
         action = STDIN.gets.chomp
         if action == "1"
             puts "You say \"Hey I'm #{$name.capitalize}\""
-            puts "The hottie says \"Hey I'm NPC. It's hot in here...\""
+            puts "#{rel.npc.name}  says \"Hey I'm #{rel.npc.name} . It's hot in here...\""
             step5
         elsif action == "2"
             puts "GAME OVER!"

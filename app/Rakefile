@@ -10,5 +10,5 @@ end
 desc 'start game'
 task :run do
   game = Game.new
-  game.intro
+  game.walk_into_a_bar
 end
