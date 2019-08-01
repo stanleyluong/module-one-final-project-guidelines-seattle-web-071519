@@ -1,7 +1,7 @@
 class Game
 
     
-    def relationship_status
+    def relationship_status(rel)
         if rel.points == (90..99)
             puts "#{rel.npc.name} regards you as soulmate."
         elsif rel.points == (80..89)
@@ -48,7 +48,25 @@ class Game
             puts "You've never met. Go introduce yourself."
             rel = Relationship.create(user: user, npc: npc, points: 50)
         else 
-            relationship_status
+            if rel.points == (90..99)
+                puts "#{rel.npc.name} regards you as soulmate."
+            elsif rel.points == (80..89)
+                puts "#{rel.npc.name} looks upon you warmly."
+            elsif rel.points == (70..79)
+                puts "#{rel.npc.name} kindly considers you."
+            elsif rel.points == (60..69)
+                puts "#{rel.npc.name} judges you amiably."
+            elsif rel.points == (50..59)
+                puts "#{rel.npc.name} regards you indifferently."
+            elsif rel.points == (40..49)
+                puts "#{rel.npc.name} looks your way apprehensively."
+            elsif rel.points == (30..39)
+                puts "#{rel.npc.name} glowers at you dubiously."
+            elsif rel.points == (20..29)
+                puts "#{rel.npc.name} glares at you threateningly!"
+            else 
+                puts "#{rel.npc.name} scowls at you ready to attack!"
+            end        
         end
 
         go_over(rel)
@@ -81,7 +99,7 @@ class Game
             puts "#{rel.npc.name} laughs and smiles. The competition frowns."
             rel.points += 10
             rel.save    
-            relationship_status
+            relationship_status(rel)
             conversate(rel)
         elsif action == "2" 
             puts "The bouncers restrain you, beat you up, and throw you out into the alleyway."
@@ -89,7 +107,7 @@ class Game
             puts "GAME OVER!"
             rel.points -= 27
             rel.save 
-            relationship_status
+            relationship_status(rel)
             walk_into_a_bar(rel)
         else 
             puts "Just be yourself."
