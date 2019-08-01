@@ -1,4 +1,28 @@
 class Game
+    
+    def relationship_status
+        if rel.points == (90..99)
+            puts "#{rel.npc.name} regards you as soulmate."
+        elsif rel.points == (80..89)
+            puts "#{rel.npc.name} looks upon you warmly."
+        elsif rel.points == (70..79)
+            puts "#{rel.npc.name} kindly considers you."
+        elsif rel.points == (60..69)
+            puts "#{rel.npc.name} judges you amiably."
+        elsif rel.points == (50..59)
+            puts "#{rel.npc.name} regards you indifferently."
+        elsif rel.points == (40..49)
+            puts "#{rel.npc.name} looks your way apprehensively."
+        elsif rel.points == (30..39)
+            puts "#{rel.npc.name} glowers at you dubiously."
+        elsif rel.points == (20..29)
+            puts "#{rel.npc.name} glares at you threateningly!"
+        else 
+            puts "#{rel.npc.name} scowls at you ready to attack!"
+        end
+    end
+
+    
     def walk_into_a_bar
         puts "A familiar face at the bar greets you. \"Hey, long time no see! What was your name again?\""
         $name = STDIN.gets.chomp.capitalize
@@ -20,16 +44,10 @@ class Game
         # puts rel.points
 
         if rel == nil
-            puts "You've never met. Go introduce yourself"
+            puts "You've never met. Go introduce yourself."
             rel = Relationship.create(user: user, npc: npc, points: 50)
         else 
-            if rel.points > 80
-                puts "They really like you"
-            elsif rel.points < 35
-                puts "They loathe you"
-            else 
-                puts "This can go either way"
-            end
+            relationship_status
         end
 
         go_over(rel)
@@ -58,9 +76,9 @@ class Game
         if action == "1"
             puts "You say \"Looks like the party is over here!\""
             puts "The #{rel.npc.name} laughs and smiles. The competition frowns."
-            rel.points += 7
+            rel.points += 10
             rel.save    
-            puts "You have #{rel.points} points with #{rel.npc.name}"
+            relationship_status
             conversate(rel)
         elsif action == "2" 
             puts "The bouncers restrain you, beat you up, and throw you out into the alleyway."
@@ -68,7 +86,7 @@ class Game
             puts "GAME OVER!"
             rel.points -= 27
             rel.save 
-            puts "You have #{rel.points} points with #{rel.npc.name}"
+            relationship_status
             walk_into_a_bar(rel)
         else 
             puts "Just be yourself."
@@ -83,10 +101,14 @@ class Game
         if action == "1"
             puts "You say #{API.pickupline}"
             puts "#{rel.npc.name} is delighted. In the face of superior game, the competition surrenders and retreats."
+            relationship_status
             introductions(rel)
         elsif action == "2"
             puts "GAME OVER!"
             puts "An injury is much sooner forgotten than an insult. -Philip Stanhope, 4th Earl of Chesterfield"
+            relationship_status
+            rel.points -= 25
+            rel.save
             walk_into_a_bar(rel)
         else 
             puts "Just be yourself."
@@ -101,6 +123,9 @@ class Game
         if action == "1"
             puts "You say \"Hey I'm #{$name.capitalize}\""
             puts "#{rel.npc.name}  says \"Hey I'm #{rel.npc.name} . It's hot in here...\""
+            rel.points += 10
+            relationship_status
+            rel.save
             step5
         elsif action == "2"
             puts "GAME OVER!"
@@ -158,7 +183,7 @@ class Game
         if action == "1"
             puts "The bartender serves two mimosas."
             puts "The hottie says, \"Thanks!\""
-            puts "The DJ starts playing \"Back That Azz Up by Juvenile\". The hottie says \"This is my favorite song!\""
+            puts "The DJ starts playing \"Back That Azz Up\" by Juvenile. The hottie says \"This is my favorite song!\""
             step8
         elsif action == "2"
             puts "GAME OVER!"
