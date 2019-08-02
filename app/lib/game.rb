@@ -23,11 +23,11 @@ class Game
         else 
             puts "You have no hope with #{rel.npc.name}. Try someone else"
         end
-        puts rel.points
+        # puts "relationship_status puts #{rel.points}"
     end
 
     
-    def walk_into_a_bar
+    def walk_into_a_bar(rel=nil)
         puts "A familiar face at the bar greets you. \"Hey, long time no see! What was your name again?\""
         $name = STDIN.gets.chomp.capitalize
         user = User.find_by(username: $name)
@@ -44,11 +44,11 @@ class Game
         if rel == nil
             puts "You've never met. Go introduce yourself."
             rel = Relationship.create(user: user, npc: npc, points: 1)
-            puts rel.points
+            puts "walk_into_a_bar puts #{rel.points}"
             # relationship_status(rel)  
         else   
             relationship_status(rel)    
-            puts rel.points
+            puts "walk_into_a_bar else statement puts #{rel.points}"
         end
         go_over(rel)
     end
@@ -68,7 +68,7 @@ class Game
             rel.points -= 10
             relationship_status(rel)
             rel.save
-            walk_into_a_bar
+            walk_into_a_bar(rel)
         else 
             puts "Just be yourself."
             puts "Pick again"
@@ -262,7 +262,7 @@ class Game
         elsif action == "2"
             puts "GAME OVER!"
             puts "#{rel.npc.name} looks away and says \"I have to go. Bye.\""
-            puts "\"People, y\'know, they either love us or they hate us; there\'s no middle ground.\"-Ace Frehley"
+            puts "\"People, y'know, they either love us or they hate us; there\'s no middle ground.\"-Ace Frehley"
             walk_into_a_bar(rel)
             rel.points += 10
             relationship_status(rel)
@@ -270,17 +270,17 @@ class Game
         else 
             puts "\"Just be yourself.\""
             puts "Pick again"
-            like(rel)
+            like_nike(rel)
         end
     end
 
     def last_call(rel)
         puts "The lights turn on. The music stops. Friend of the hottie says \"Our Uber is here.\""
-        puts "1) Grab #{rel.npc.name}\'s arm and be possessive. 2) Ask for phone number."
+        puts "1) Grab #{rel.npc.name}'s arm and be possessive. 2) Ask for phone number."
         action = STDIN.gets.chomp
         if action == "1"
-            puts "#{rel.npc.name}\'s friend punches you. The bouncers grab you and throw you into the dumpster in the alleyway."
-            puts "\"If you love something let it go. If it comes back it\'s yours, and that\'s how you know.\"-Christina Aguilera"
+            puts "#{rel.npc.name}'s friend punches you. The bouncers grab you and throw you into the dumpster in the alleyway."
+            puts "\"If you love something let it go. If it comes back it's yours, and that's how you know.\"-Christina Aguilera"
             puts "GAME OVER!"
             rel.points += 10
             relationship_status(rel)
