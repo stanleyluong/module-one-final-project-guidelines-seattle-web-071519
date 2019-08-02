@@ -1,24 +1,24 @@
 class Game
 
     
-    def relationship_status
+    def relationship_status(rel)
         if rel.points >= 90
             puts "#{rel.npc.name} regards you as soulmate."
-        elsif rel.points (80..89)
+        elsif rel.points.between?(80,89)
             puts "#{rel.npc.name} looks upon you warmly."
-        elsif rel.points (70..79)
+        elsif rel.points.between?(70,79)
             puts "#{rel.npc.name} kindly considers you."
-        elsif rel.points (60..69)
+        elsif rel.points.between?(60,69)
             puts "#{rel.npc.name} judges you amiably."
-        elsif rel.points (50..59)
+        elsif rel.points.between?(50,59)
             puts "#{rel.npc.name} regards you indifferently."
-        elsif rel.points (40..49)
+        elsif rel.points.between?(40,49)
             puts "#{rel.npc.name} looks your way apprehensively."
-        elsif rel.points (30..39)
+        elsif rel.points.between?(30,39)
             puts "#{rel.npc.name} glowers at you dubiously."
-        elsif rel.points (20..29)
+        elsif rel.points.between?(20,29)
             puts "#{rel.npc.name} glares at you threateningly!"
-        elsif rel.points (1..19)
+        elsif rel.points.between?(1,19)
             puts "#{rel.npc.name} scowls at you ready to attack!"
         else 
             puts "You have no hope with #{rel.npc.name}. Try someone else"
@@ -43,11 +43,11 @@ class Game
         rel = Relationship.find_by(user: user, npc: npc)
         if rel == nil
             puts "You've never met. Go introduce yourself."
-            rel = Relationship.create(user: user, npc: npc, points: 50)
+            rel = Relationship.create(user: user, npc: npc, points: 1)
             puts rel.points
             # relationship_status(rel)  
         else   
-            relationship_status    
+            relationship_status(rel)    
             puts rel.points
         end
         go_over(rel)
@@ -59,7 +59,7 @@ class Game
         if action == "1"
             puts "You start walking in #{rel.npc.name}'s direction when someone approaches them first. What do you do?"
             rel.points += 10
-            relationship_status
+            relationship_status(rel)
             rel.save
             enter_conversation(rel)        
         elsif action == "2"
@@ -131,7 +131,7 @@ class Game
         action = STDIN.gets.chomp
         if action == "1"
             puts "You say \"Hey I'm #{$name.capitalize}\""
-            puts "#{rel.npc.name}  says \"Hey I'm #{rel.npc.name} . It's hot in here...\""
+            puts "#{rel.npc.name}  says \"Hey I'm #{rel.npc.name}. It's hot in here...\""
             rel.points += 10
             relationship_status(rel)
             rel.save
@@ -262,7 +262,7 @@ class Game
         elsif action == "2"
             puts "GAME OVER!"
             puts "#{rel.npc.name} looks away and says \"I have to go. Bye.\""
-            puts "\"People, y'know, they either love us or they hate us; there's no middle ground.\"-Ace Frehley"
+            puts "\"People, y\'know, they either love us or they hate us; there\'s no middle ground.\"-Ace Frehley"
             walk_into_a_bar(rel)
             rel.points += 10
             relationship_status(rel)
@@ -276,11 +276,11 @@ class Game
 
     def last_call(rel)
         puts "The lights turn on. The music stops. Friend of the hottie says \"Our Uber is here.\""
-        puts "1) Grab #{rel.npc.name}'s arm and be possessive. 2) Ask for phone number."
+        puts "1) Grab #{rel.npc.name}\'s arm and be possessive. 2) Ask for phone number."
         action = STDIN.gets.chomp
         if action == "1"
-            puts "#{rel.npc.name}'s friend punches you. The bouncers grab you and throw you into the dumpster in the alleyway."
-            puts "\"If you love something let it go. If it comes back it's yours, and that's how you know.\"-Christina Aguilera"
+            puts "#{rel.npc.name}\'s friend punches you. The bouncers grab you and throw you into the dumpster in the alleyway."
+            puts "\"If you love something let it go. If it comes back it\'s yours, and that\'s how you know.\"-Christina Aguilera"
             puts "GAME OVER!"
             rel.points += 10
             relationship_status(rel)
