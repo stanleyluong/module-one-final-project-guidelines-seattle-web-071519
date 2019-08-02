@@ -7,3 +7,15 @@ class API
         response
     end
 end
+
+class API2
+    def self.joke
+        url = 'https://official-joke-api.appspot.com/jokes/programming/random'
+        response = RestClient.get(url)
+        JSON.parse(response)
+        response = response[0].split(":")
+        setup = response[:setup]
+        
+        response
+    end
+end
