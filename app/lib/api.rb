@@ -24,7 +24,7 @@ end
 
 class API2
     def self.joke
-        url = 'https://sv443.net/jokeapi/category/Any'
+        url = 'https://sv443.net/jokeapi/category/Programming'
         response = RestClient.get(url)
         response = JSON.parse(response)
         if response["type"]=="single"

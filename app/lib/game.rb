@@ -45,6 +45,17 @@ class Game
         rel.save
     end
 
+    def joke(rel)
+    puts "Thinking of a joke...."
+    puts "You say: "
+    puts "#{API2.joke}"
+    puts "#{rel.npc.name} laughs."
+        rel.points += 10
+        relationship_status(rel)
+        rel.save
+    end
+
+
     def walk_into_a_bar(rel=nil)
 
         puts "██████╗  █████╗ ████████╗██╗███╗   ██╗ ██████╗     ███████╗██╗███╗   ███╗"
@@ -196,7 +207,7 @@ class Game
     end
 
     def buy_you_a_drank(rel)#STEP5        
-        puts "1) Offer to buy drink. 2) Shrug shoulders. 3) Use pickup line."
+        puts "1) Offer to buy drink. 2) Shrug shoulders. 3) Use pickup line. 4) Say Joke"
         action = STDIN.gets.chomp
         if action == "1"
             puts "You say \"Can I buy you a drink?\""
@@ -217,6 +228,9 @@ class Game
         elsif action == "3"
             pickup_line(rel)
             buy_you_a_drank(rel)
+        elsif action == "4"
+            joke(rel)
+            buy_you_a_drank(rel)
         else 
             be_yourself
             buy_you_a_drank(rel)
@@ -224,7 +238,7 @@ class Game
     end
 
     def the_key_to_all_virtues(rel)
-        puts "1) Stay cool. 2) Get angry. 3) Use pickup line 4) Inquire about favorite drink."
+        puts "1) Stay cool. 2) Get angry. 3) Use pickup line 4) Inquire about favorite drink. 5)Say Joke"
         action = STDIN.gets.chomp
         if action == "1"
             puts "The bartender asks what the two of you would like to drink."            
@@ -249,6 +263,9 @@ class Game
             rel.save
             relationship_status(rel)
             the_key_to_all_virtues(rel)
+        elsif action == "5"
+            joke(rel)
+            buy_you_a_drank(rel)
         else 
             be_yourself
             the_key_to_all_virtues(rel)
