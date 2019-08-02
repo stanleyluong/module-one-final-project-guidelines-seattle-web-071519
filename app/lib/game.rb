@@ -59,7 +59,6 @@ class Game
             # relationship_status(rel)  
         else   
             relationship_status(rel)    
-            puts "walk_into_a_bar else statement puts #{rel.points}"
         end
         go_over(rel)
     end

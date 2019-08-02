@@ -5,9 +5,9 @@ steve = User.create(username:"Steve")
 stan = User.create(username:"Stan")
 
 Npc.destroy_all
-alex = Npc.create(name:"Alex", age: 25, favorite_drink: "mimosa")
-taylor = Npc.create(name:"Taylor",age: 25, favorite_drink: "mimosa")
-bobby = Npc.create(name:"Bobby",age: 25, favorite_drink: "mimosa")
+alex = Npc.create(name:"Alex", age: 25, favorite_drink: "Mimosa")
+taylor = Npc.create(name:"Taylor",age: 25, favorite_drink: "Jack & Coke")
+bobby = Npc.create(name:"Bobby",age: 25, favorite_drink: "Vodka Tonic")
 
 Relationship.destroy_all
 Relationship.create(user:steve, npc:taylor, points:95)
