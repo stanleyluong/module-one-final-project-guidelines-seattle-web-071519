@@ -64,7 +64,7 @@ class Game
     end
     
     def go_over(rel)#STEP1       
-        puts "1) Go over and talk to #{rel.npc.name} 2) Run away."
+        puts "1) Go over and talk to #{rel.npc.name} 2) Run away. 3) Take a shot. 4) Hesitate."
         action = STDIN.gets.chomp
         if action == "1"
             puts "You start walking in #{rel.npc.name}'s direction but someone approaches them first. What do you do?"
@@ -79,6 +79,9 @@ class Game
             relationship_status(rel)
             rel.save
             go_over(rel)
+        elsif action == "3"
+            puts "You feel more confident."
+            go_over(rel)
         else 
             puts "Just be yourself."
             puts "Pick again"
@@ -87,7 +90,7 @@ class Game
     end
     
     def enter_conversation(rel)#STEP2
-        puts "1) Enter their conversation. 2) Sucker punch competition in the face."
+        puts "1) Enter their conversation. 2) Sucker punch competition in the face. 3) Look around awkwardly."
         action = STDIN.gets.chomp
         if action == "1"
             puts "You say \"Looks like the party is over here!\""
@@ -112,7 +115,7 @@ class Game
     end
 
     def conversate(rel)#STEP3
-        puts "1) Use pickup line. 2) Insult."
+        puts "1) Use pickup line. 2) Insult. 3) Ask age."
         action = STDIN.gets.chomp
         if action == "1"
             puts "Thinking of a pickup line..."
@@ -130,7 +133,13 @@ class Game
             rel.points -= 25
             rel.save
             conversate(rel)
-        else 
+        elsif action == "3"
+            puts "\"It's rude to ask somebody's age! I'm #{rel.npc.age}\""
+            relationship_status(rel)
+            rel.points -= 10
+            rel.save
+            conversate(rel)
+        else
             puts "Just be yourself."
             puts "Pick again"
             conversate(rel)
@@ -172,7 +181,7 @@ class Game
 
     def buy_you_a_drank(rel)#STEP5
         
-        puts "1) Offer to buy drink. 2) Shrug shoulders."
+        puts "1) Offer to buy drink. 2) Shrug shoulders. 3) Use pickup line."
         action = STDIN.gets.chomp
         if action == "1"
             puts "You say \"Can I buy you a drink?\""
@@ -205,11 +214,10 @@ class Game
     end
 
     def the_key_to_all_virtues(rel)
-        puts "1) Stay cool. 2) Get angry."
+        puts "1) Stay cool. 2) Get angry. 3) Use pickup line 4) Inquire about favorite drink."
         action = STDIN.gets.chomp
         if action == "1"
-            puts "The bartender asks what the two of you would like to drink."
-            puts "The #{rel.npc.name} says, \"I'll have a #{rel.npc.favorite_drink}\""
+            puts "The bartender asks what the two of you would like to drink."            
             rel.points += 10
             relationship_status(rel)
             rel.save
@@ -230,6 +238,12 @@ class Game
             relationship_status(rel)
             rel.save
             the_key_to_all_virtues(rel)
+        elsif action == "4"
+            puts "The #{rel.npc.name} says, \"I'll have a #{rel.npc.favorite_drink}\""
+            rel.points += 5
+            rel.save
+            relationship_status(rel)
+            the_key_to_all_virtues(rel)
         else 
             puts "Just be yourself."
             puts "Pick again"
@@ -238,17 +252,17 @@ class Game
     end
 
     def get_courage(rel)
-        puts "1) Order two #{rel.npc.favorite_drink}. 2) Order two AMFs."
+        puts "1) Order two AMFs. 2) Order two #{rel.npc.favorite_drink}s."
         action = STDIN.gets.chomp
-        if action == "1"
-            puts "The bartender serves two #{rel.npc.favorite_drink.pluralize}."#CHECK THIS
+        if action == "2"
+            puts "The bartender serves two #{rel.npc.favorite_drink}s."#CHECK THIS
             puts "#{rel.npc.name} says, \"Thanks!\""
             puts "The DJ starts playing \"Back That Azz Up\" by Juvenile. #{rel.npc.name} says \"This is my favorite song!\""
             rel.points += 10
             relationship_status(rel)
             rel.save
             get_funky(rel)
-        elsif action == "2"
+        elsif action == "1"
             puts "#{rel.npc.name} takes the AMF and dumps it on your head."
             puts "\"The simple act of paying attention can take you a long way.\"-Keanu Reeves"
             puts "GAME OVER!"
@@ -298,7 +312,7 @@ class Game
     end
 
     def like_nike(rel)
-        puts "1) Go for the kiss. 2) Hesitate."
+        puts "1) Go for the kiss. 2) Hesitate. 3) Use pickup line."
         action = STDIN.gets.chomp
         if action == "1"
             puts "Your eyes close. Your lips meet. Everything else in the moment disappears."
@@ -314,6 +328,12 @@ class Game
             rel.points -= 10
             relationship_status(rel)
             rel.save
+        elsif action == "3"
+            puts "#{rel.npc.name} says, \"What did you say? It's loud in here!\""
+            rel.points -= 10
+            relationship_status(rel)
+            rel.save
+            like_nike(rel)
         else 
             puts "\"Just be yourself.\""
             puts "Pick again"
@@ -348,9 +368,7 @@ class Game
         else 
             puts "Just be yourself."
             puts "Pick again"
-            rel.points += 10
             relationship_status(rel)
-            rel.save
             last_call(rel)
         end
     end

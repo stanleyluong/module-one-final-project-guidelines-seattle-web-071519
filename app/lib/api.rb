@@ -8,14 +8,30 @@ class API
     end
 end
 
+# class API2
+#     def self.joke
+#         url = 'https://sv443.net/jokeapi/category/Any'
+#         response = RestClient.get(url)
+#         if JSON.parse(response)["type"] == "twopart"
+#             puts JSON.parse(response)["setup"]
+#             puts JSON.parse(response)["delivery"]
+#         else    
+#             puts JSON.parse(response)["joke"]
+#         end 
+       
+#     end
+#  end
+
 class API2
     def self.joke
-        url = 'https://official-joke-api.appspot.com/jokes/programming/random'
+        url = 'https://sv443.net/jokeapi/category/Any'
         response = RestClient.get(url)
-        JSON.parse(response)
-        response = response[0].split(":")
-        setup = response[:setup]
-        
-        response
+        response = JSON.parse(response)
+        if response["type"]=="single"
+            puts response["joke"]
+        else
+            puts response["setup"]
+            puts response["delivery"]
+        end
     end
-end
+ end
