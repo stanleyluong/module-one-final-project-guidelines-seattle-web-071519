@@ -26,7 +26,25 @@ class Game
         # puts "relationship_status puts #{rel.points}"
     end
 
+    def be_yourself
+            puts"             ,,,"
+            puts"            (o o)"
+            puts"    ----oOO--( )--OOo----"
+            puts "Just be yourself."
+    end
     
+    def pickup_line(rel)
+        puts "Thinking of a pickup line..."
+        puts " (\\____/)"
+        puts "( ͡ ͡° ͜ ʖ ͡ ͡°)"
+        puts " \\╭☞ \\╭☞"
+        puts "You say #{API.pickupline}"
+        puts "#{rel.npc.name} is delighted."
+        rel.points += 10
+        relationship_status(rel)
+        rel.save
+    end
+
     def walk_into_a_bar(rel=nil)
 
         puts "██████╗  █████╗ ████████╗██╗███╗   ██╗ ██████╗     ███████╗██╗███╗   ███╗"
@@ -49,14 +67,11 @@ class Game
         end
         puts "You look around the room and make eye contact with someone at the bar." #COULDN'T USE NPC.NAME
         puts "Your friend notices and says, \"You should go over there.\"" #REMOVED HOTTIE REFERENCE
-        npc = Npc.all.sample 
-        # puts "You see #{npc.name}"    
+        npc = Npc.all.sample   
         rel = Relationship.find_by(user: user, npc: npc)
         if rel == nil
             puts "You've never met. Go introduce yourself."
             rel = Relationship.create(user: user, npc: npc, points: 1)
-            puts "walk_into_a_bar puts #{rel.points}"
-            # relationship_status(rel)  
         else   
             relationship_status(rel)    
         end
@@ -64,7 +79,7 @@ class Game
     end
     
     def go_over(rel)#STEP1       
-        puts "1) Go over and talk to #{rel.npc.name} 2) Run away. 3) Take a shot. 4) Hesitate."
+        puts "1) Go over and talk to #{rel.npc.name} 2) Run away. 3) Have a drink. 4) Hesitate."
         action = STDIN.gets.chomp
         if action == "1"
             puts "You start walking in #{rel.npc.name}'s direction but someone approaches them first. What do you do?"
@@ -80,11 +95,18 @@ class Game
             rel.save
             go_over(rel)
         elsif action == "3"
+        puts"     _____  "
+        puts"    /.---.\\"
+        puts"    |`````|"
+        puts"    \     /"
+        puts"     `-.-'            ___"
+        puts"       |     /\\     .'   /\\"
+        puts"     __|__  |-----;     |  |"
+        puts"    `-----`  \\/     '.___\\/"
             puts "You feel more confident."
             go_over(rel)
-        else 
-            puts "Just be yourself."
-            puts "Pick again"
+        else
+            be_yourself
             go_over(rel)
         end
     end
@@ -100,6 +122,7 @@ class Game
             relationship_status(rel)
             conversate(rel)
         elsif action == "2" 
+            puts "(ง'̀-'́)ง"
             puts "The bouncers restrain you, beat you up, and throw you out into the alleyway."
             puts "\"Holding on to anger is like grasping a hot coal with the intent of throwing it at someone else; you are the one who gets burned.\" -Buddha" 
             puts "GAME OVER!"
@@ -108,8 +131,7 @@ class Game
             relationship_status(rel)
             walk_into_a_bar(rel)
         else 
-            puts "Just be yourself."
-            puts "Pick again"
+            be_yourself
             enter_conversation(rel)
         end
     end
@@ -118,17 +140,18 @@ class Game
         puts "1) Use pickup line. 2) Insult. 3) Ask age."
         action = STDIN.gets.chomp
         if action == "1"
-            puts "Thinking of a pickup line..."
-            puts
-            puts "You say #{API.pickupline}"
-            puts "#{rel.npc.name} is delighted. In the face of superior game, the competition surrenders and retreats."
-            rel.points += 10
-            relationship_status(rel)
-            rel.save
+            pickup_line(rel)
+            puts "In the face of superior game, the competition surrenders and retreats."
             introductions(rel)
         elsif action == "2"
             puts "\"An injury is much sooner forgotten than an insult.\"-Philip Stanhope, 4th Earl of Chesterfield"
             puts "#{rel.npc.name} slaps you."
+            puts "///-\\\\\\"
+            puts "|^   ^|"
+            puts "|O   O|"
+            puts "|  ~ *slap*!"
+            puts " \\ O /"
+            puts " | |"
             relationship_status(rel)
             rel.points -= 25
             rel.save
@@ -140,8 +163,7 @@ class Game
             rel.save
             conversate(rel)
         else
-            puts "Just be yourself."
-            puts "Pick again"
+            be_yourself
             conversate(rel)
         end
     end
@@ -165,22 +187,15 @@ class Game
             relationship_status(rel)
             introductions(rel)
         elsif action == "3"
-            puts "Thinking of a pickup line..."
-            puts "You say #{API.pickupline}"
-            puts "#{rel.npc.name} is delighted."
-            rel.points += 10
-            relationship_status(rel)
-            rel.save
+            pickup_line(rel)
             introductions(rel)
         else 
-            puts "Just be yourself."
-            puts "Pick again"
+            be_yourself  
             introductions(rel)
         end
     end
 
-    def buy_you_a_drank(rel)#STEP5
-        
+    def buy_you_a_drank(rel)#STEP5        
         puts "1) Offer to buy drink. 2) Shrug shoulders. 3) Use pickup line."
         action = STDIN.gets.chomp
         if action == "1"
@@ -192,6 +207,7 @@ class Game
             rel.save
             the_key_to_all_virtues(rel)
         elsif action == "2"
+            puts "¯\\_(ツ)_/¯"
             puts "\"The heart that gives, gathers.\"-Tao Te Ching"
             puts "#{rel.npc.name} is bored."
             rel.points -= 10
@@ -199,16 +215,10 @@ class Game
             rel.save
             buy_you_a_drank(rel)
         elsif action == "3"
-            puts "Thinking of a pickup line..."
-            puts "You say #{API.pickupline}"
-            puts "#{rel.npc.name} is delighted."
-            rel.points += 10
-            relationship_status(rel)
-            rel.save
+            pickup_line(rel)
             buy_you_a_drank(rel)
         else 
-            puts "Just be yourself."
-            puts "Pick again"
+            be_yourself
             buy_you_a_drank(rel)
         end
     end
@@ -231,22 +241,16 @@ class Game
             rel.save
             walk_into_a_bar(rel)
         elsif action == "3"
-            puts "Thinking of a pickup line..."
-            puts "You say #{API.pickupline}"
-            puts "#{rel.npc.name} is delighted."
-            rel.points += 10
-            relationship_status(rel)
-            rel.save
+            pickup_line(rel)
             the_key_to_all_virtues(rel)
         elsif action == "4"
-            puts "The #{rel.npc.name} says, \"I'll have a #{rel.npc.favorite_drink}\""
+            puts "#{rel.npc.name} says, \"I'll have a #{rel.npc.favorite_drink}\""
             rel.points += 5
             rel.save
             relationship_status(rel)
             the_key_to_all_virtues(rel)
         else 
-            puts "Just be yourself."
-            puts "Pick again"
+            be_yourself
             the_key_to_all_virtues(rel)
         end
     end
@@ -255,6 +259,25 @@ class Game
         puts "1) Order two AMFs. 2) Order two #{rel.npc.favorite_drink}s."
         action = STDIN.gets.chomp
         if action == "2"
+
+            puts"*                           )   *"
+            puts"              )     *      ("
+            puts"    )        (                   ("
+            puts"   (          )     (             )"
+            puts"    )    *           )        )  ("
+            puts"   (                (        (      *"
+            puts"    )          H     )        )"
+            puts"              [ ]            ("
+            puts"       (  *   |-|       *     )    ("
+            puts" *      )     |_|        .          )"
+            puts"       (      | |    .  "
+            puts" )           /   \\     .    ' .        *"
+            puts"(           |_____|  '  .    .  "
+            puts" )          | ___ |  \\~~~/  ' .   ("
+            puts"        *   | \\ / |   \\_/  \\~~~/   )"
+            puts"            | _Y_ |  __|__  \\_/   ("
+            puts"            `-----`        __|__"
+        
             puts "The bartender serves two #{rel.npc.favorite_drink}s."#CHECK THIS
             puts "#{rel.npc.name} says, \"Thanks!\""
             puts "The DJ starts playing \"Back That Azz Up\" by Juvenile. #{rel.npc.name} says \"This is my favorite song!\""
@@ -271,16 +294,10 @@ class Game
             rel.save
             walk_into_a_bar(rel)
         elsif action == "3"
-            puts "Thinking of a pickup line..."
-            puts "You say #{API.pickupline}"
-            puts "#{rel.npc.name} is delighted."
-            rel.points += 10
-            relationship_status(rel)
-            rel.save
+            pickup_line(rel)
             get_courage(rel)
         else 
-            puts "Just be yourself."
-            puts "Pick again"
+            be_yourself
             get_courage(rel)
         end
     end
@@ -298,6 +315,7 @@ class Game
             rel.save
             walk_into_a_bar(rel)
         elsif action == "2"
+            puts "♪┏(・o･)┛♪┗ ( ･o･) ┓♪♪┏(・o･)┛♪┗ ( ･o･) ┓♪♪┏(・o･)┛♪┗ ( ･o･) ┓♪"
             puts "The space between your bodies leaves no room for the Holy Spirit."
             puts "#{rel.npc.name} gazes into your eyes."
             rel.points += 10
@@ -305,8 +323,7 @@ class Game
             rel.save
             like_nike(rel)
         else 
-            puts "Just be yourself."
-            puts "Pick again"
+            be_yourself
             get_funky(rel)
         end
     end
@@ -335,8 +352,7 @@ class Game
             rel.save
             like_nike(rel)
         else 
-            puts "\"Just be yourself.\""
-            puts "Pick again"
+            be_yourself
             like_nike(rel)
         end
     end
@@ -366,8 +382,7 @@ class Game
                     puts "THE END"
                 end   
         else 
-            puts "Just be yourself."
-            puts "Pick again"
+            be_yourself
             relationship_status(rel)
             last_call(rel)
         end
