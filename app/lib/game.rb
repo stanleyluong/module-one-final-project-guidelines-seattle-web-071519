@@ -1,26 +1,29 @@
 class Game
 
     
-    def relationship_status(rel)
-        if rel.points == (90..99)
+    def relationship_status
+        if rel.points >= 90
             puts "#{rel.npc.name} regards you as soulmate."
-        elsif rel.points == (80..89)
+        elsif rel.points (80..89)
             puts "#{rel.npc.name} looks upon you warmly."
-        elsif rel.points == (70..79)
+        elsif rel.points (70..79)
             puts "#{rel.npc.name} kindly considers you."
-        elsif rel.points == (60..69)
+        elsif rel.points (60..69)
             puts "#{rel.npc.name} judges you amiably."
-        elsif rel.points == (50..59)
+        elsif rel.points (50..59)
             puts "#{rel.npc.name} regards you indifferently."
-        elsif rel.points == (40..49)
+        elsif rel.points (40..49)
             puts "#{rel.npc.name} looks your way apprehensively."
-        elsif rel.points == (30..39)
+        elsif rel.points (30..39)
             puts "#{rel.npc.name} glowers at you dubiously."
-        elsif rel.points == (20..29)
+        elsif rel.points (20..29)
             puts "#{rel.npc.name} glares at you threateningly!"
-        else 
+        elsif rel.points (1..19)
             puts "#{rel.npc.name} scowls at you ready to attack!"
+        else 
+            puts "You have no hope with #{rel.npc.name}. Try someone else"
         end
+        puts rel.points
     end
 
     
@@ -34,56 +37,38 @@ class Game
             puts "Oh yeah... #{$name}! Nice to meet you!"
             user = User.create(username: $name)
         end
-
-        puts "You look around the room and make eye contact with someone. Your friend notices and says, \"You should go talk to that hottie over there.\""
-
+        puts "You look around the room and make eye contact with a hottie. Your friend notices and says, \"You should go talk to that hottie over there.\""
         npc = Npc.all.sample 
-        puts "You see #{npc.name}"   
-        
+        puts "You see #{npc.name}"    
         rel = Relationship.find_by(user: user, npc: npc)
-        # puts rel
-        # puts rel.points
-
         if rel == nil
             puts "You've never met. Go introduce yourself."
             rel = Relationship.create(user: user, npc: npc, points: 50)
-        else 
-            if rel.points == (90..99)
-                puts "#{rel.npc.name} regards you as soulmate."
-            elsif rel.points == (80..89)
-                puts "#{rel.npc.name} looks upon you warmly."
-            elsif rel.points == (70..79)
-                puts "#{rel.npc.name} kindly considers you."
-            elsif rel.points == (60..69)
-                puts "#{rel.npc.name} judges you amiably."
-            elsif rel.points == (50..59)
-                puts "#{rel.npc.name} regards you indifferently."
-            elsif rel.points == (40..49)
-                puts "#{rel.npc.name} looks your way apprehensively."
-            elsif rel.points == (30..39)
-                puts "#{rel.npc.name} glowers at you dubiously."
-            elsif rel.points == (20..29)
-                puts "#{rel.npc.name} glares at you threateningly!"
-            else 
-                puts "#{rel.npc.name} scowls at you ready to attack!"
-            end        
+            puts rel.points
+            # relationship_status(rel)  
+        else   
+            relationship_status    
+            puts rel.points
         end
-
         go_over(rel)
     end
     
-    def go_over(rel)#STEP1
-        
+    def go_over(rel)#STEP1       
         puts "1) Go over and talk to #{rel.npc.name} 2) Run away."
         action = STDIN.gets.chomp
         if action == "1"
             puts "You start walking in #{rel.npc.name}'s direction when someone approaches them first. What do you do?"
+            rel.points += 10
+            relationship_status
+            rel.save
             enter_conversation(rel)        
         elsif action == "2"
             puts "\"Fortune favors the bold\"-Virgil"
-            
-            puts "GAME OVER!" 
-            walk_into_a_bar(rel)
+            puts "Time for some liquid courage?" 
+            rel.points -= 10
+            relationship_status(rel)
+            rel.save
+            walk_into_a_bar
         else 
             puts "Just be yourself."
             puts "Pick again"
@@ -105,7 +90,7 @@ class Game
             puts "The bouncers restrain you, beat you up, and throw you out into the alleyway."
             puts "\"Holding on to anger is like grasping a hot coal with the intent of throwing it at someone else; you are the one who gets burned.\" -Buddha" 
             puts "GAME OVER!"
-            rel.points -= 27
+            rel.points -= 50
             rel.save 
             relationship_status(rel)
             walk_into_a_bar(rel)
@@ -120,17 +105,20 @@ class Game
         puts "1) Use pickup line. 2) Insult."
         action = STDIN.gets.chomp
         if action == "1"
+            puts "Thinking of a pickup line..."
             puts "You say #{API.pickupline}"
             puts "#{rel.npc.name} is delighted. In the face of superior game, the competition surrenders and retreats."
-            relationship_status
+            rel.points += 10
+            relationship_status(rel)
+            rel.save
             introductions(rel)
         elsif action == "2"
             puts "\"An injury is much sooner forgotten than an insult.\"-Philip Stanhope, 4th Earl of Chesterfield"
-            puts "GAME OVER!"
-            relationship_status
+            puts "#{rel.npc.name} slaps you."
+            relationship_status(rel)
             rel.points -= 25
             rel.save
-            walk_into_a_bar(rel)
+            conversate(rel)
         else 
             puts "Just be yourself."
             puts "Pick again"
@@ -145,13 +133,16 @@ class Game
             puts "You say \"Hey I'm #{$name.capitalize}\""
             puts "#{rel.npc.name}  says \"Hey I'm #{rel.npc.name} . It's hot in here...\""
             rel.points += 10
-            relationship_status
+            relationship_status(rel)
             rel.save
             buy_you_a_drank(rel)
         elsif action == "2"
-            puts "\"Don't talk to strangers.\"-Mom & Dad"
-            puts "GAME OVER!"
-            walk_into_a_bar(rel)
+            puts "#{rel.npc.name} thinks, \"Don't talk to strangers.\"-Mom & Dad"
+            puts "#{rel.npc.name} says \"Maybe you should introduce yourself first.\""
+            rel.points -= 10
+            rel.save
+            relationship_status(rel)
+            introductions(rel)
         else 
             puts "Just be yourself."
             puts "Pick again"
@@ -167,10 +158,13 @@ class Game
             puts "You say \"Can I buy you a drink?\""
             puts "#{rel.npc.name} says \"Sure!\""
             puts "The bartender is busy in the crowded bar. He skips your turn and gives his attention to someone else."
+            rel.points += 10
+            relationship_status(rel)
+            rel.save
             the_key_to_all_virtues(rel)
         elsif action == "2"
             puts "\"The heart that gives, gathers.\"-Tao Te Ching"
-            puts "GAME OVER!"
+            puts "#{rel.npc.name} is bored."
             walk_into_a_bar(rel)
         else 
             puts "Just be yourself."
@@ -185,11 +179,17 @@ class Game
         if action == "1"
             puts "The bartender asks what the two of you would like to drink."
             puts "The #{rel.npc.name} says, \"I'll have a mimosa.\""
+            rel.points += 10
+            relationship_status(rel)
+            rel.save
             get_courage(rel)
         elsif action == "2"
             puts "#{rel.npc.name} gets embarassed by you and leaves."
             puts "\"Patience is not simply the ability to wait - it's how we behave while we're waiting.\"-Joyce Meyer"
             puts "GAME OVER!"
+            rel.points += 10
+            relationship_status(rel)
+            rel.save
             walk_into_a_bar(rel)
         else 
             puts "Just be yourself."
@@ -205,11 +205,17 @@ class Game
             puts "The bartender serves two mimosas."
             puts "#{rel.npc.name} says, \"Thanks!\""
             puts "The DJ starts playing \"Back That Azz Up by Juvenile\". #{rel.npc.name} says \"This is my favorite song!\""
+            rel.points += 10
+            relationship_status(rel)
+            rel.save
             get_funky(rel)
         elsif action == "2"
             puts "The #{rel.npc.name} takes the AMF and dumps it on your head."
             puts "\"The simple act of paying attention can take you a long way.\"-Keanu Reeves"
             puts "GAME OVER!"
+            rel.points += 10
+            relationship_status(rel)
+            rel.save
             walk_into_a_bar(rel)
         else 
             puts "Just be yourself."
@@ -226,10 +232,16 @@ class Game
             puts "GAME OVER!"
             puts "You go to the restroom and there is a huge line. When you return to the dance floor #{rel.npc.name} is dancing with someone else."
             puts "\"Bravery is being the only one who knows you're afraid.\"-Franklin P. Jones"   
+            rel.points += 10
+            relationship_status(rel)
+            rel.save
             walk_into_a_bar(rel)
         elsif action == "2"
             puts "The space between your bodies leaves no room for the Holy Spirit."
             puts "The #{rel.npc.name} gazes into your eyes."
+            rel.points += 10
+            relationship_status(rel)
+            rel.save
             like_nike(rel)
         else 
             puts "Just be yourself."
@@ -243,12 +255,18 @@ class Game
         action = STDIN.gets.chomp
         if action == "1"
             puts "Your eyes close. Your lips meet. Everything else in the moment disappears."
+            rel.points += 10
+            relationship_status(rel)
+            rel.save
             last_call(rel)
         elsif action == "2"
             puts "GAME OVER!"
             puts "#{rel.npc.name} looks away and says \"I have to go. Bye.\""
             puts "\"People, y'know, they either love us or they hate us; there's no middle ground.\"-Ace Frehley"
             walk_into_a_bar(rel)
+            rel.points += 10
+            relationship_status(rel)
+            rel.save
         else 
             puts "\"Just be yourself.\""
             puts "Pick again"
@@ -264,9 +282,15 @@ class Game
             puts "#{rel.npc.name}'s friend punches you. The bouncers grab you and throw you into the dumpster in the alleyway."
             puts "\"If you love something let it go. If it comes back it's yours, and that's how you know.\"-Christina Aguilera"
             puts "GAME OVER!"
+            rel.points += 10
+            relationship_status(rel)
+            rel.save
         elsif action == "2"
             puts "VICTORY!"
             puts "You trade phone numbers with #{rel.npc.name}. #{rel.npc.name} gets into the Uber and leaves."
+            rel.points += 10
+            relationship_status(rel)
+            rel.save
             puts "Play again?"
                 input = STDIN.gets.chomp
                 if input == "yes" || input ==  "y"
@@ -277,6 +301,9 @@ class Game
         else 
             puts "Just be yourself."
             puts "Pick again"
+            rel.points += 10
+            relationship_status(rel)
+            rel.save
             last_call(rel)
         end
     end
